@@ -20,7 +20,7 @@ import Icon from '@/components/Icon';
 export default {
   name: 'Header',
   components: {
-    Icon
-  }
+    Icon,
+  },
 };
 </script>

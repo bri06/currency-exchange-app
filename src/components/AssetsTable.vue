@@ -6,21 +6,26 @@
         <th>
           <span>Ranking</span>
         </th>
-        <th>Nombre</th>
-        <th>Precio</th>
-        <th>Cap. de Mercado</th>
-        <th>Variación 24hs</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Market Cap.</th>
+        <th>24-hour variation</th>
         <td class="hidden sm:block"></td>
       </tr>
     </thead>
     <tbody>
-      <tr class="border-b border-gray-200 hover:bg-gray-100 hover:bg-orange-100">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+      <tr
+        v-for="item in assets"
+        :key="item.id"
+        class="border-b border-gray-200 hover:bg-gray-100 hover:bg-orange-100">
+        <td>
+          <img :src="`https://static.coincap.io/assets/icons/${item.symbol.toLowerCase()}@2x.png`" :alt="item.name">
+        </td>
+        <td><b>#{{ item.rank }}</b></td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.priceUsd }}</td>
+        <td>{{ item.marketCapUsd }}</td>
+        <td>{{ item.changePercent24Hr }}</td>
         <td class="hidden sm:block"></td>
       </tr>
     </tbody>
@@ -34,9 +39,9 @@ export default {
   props: {
     assets: {
       type: Array,
-      default: () => []
-    }
-  }
+      default: () => [],
+    },
+  },
 };
 </script>
 
