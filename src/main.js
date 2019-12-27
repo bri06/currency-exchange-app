@@ -4,6 +4,10 @@ import '@/assets/css/tailwind.css';
 
 import router from '@/routes';
 
+import { dollarFilter, percentFilter } from '@/utils';
+
+Vue.filter('dollar', dollarFilter);
+Vue.filter('percent', percentFilter);
 Vue.config.productionTip = false;
 
 new Vue({
