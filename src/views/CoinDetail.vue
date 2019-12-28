@@ -1,6 +1,9 @@
 <template>
   <div class="flex-col">
-    <template v-if="asset.id">
+    <div class="flex justify-center">
+      <bounce-loader :loading="isLoading" :color="'#68d391'" :size="100" />
+    </div>
+    <template v-if="!isLoading">
       <div class="flex flex-col sm:flex-row justify-around items-center">
         <div class="flex flex-col items-center">
           <img class="w-20 h-20 mr-5"
@@ -73,7 +76,8 @@ export default {
   data() {
     return {
       asset: {},
-      history: []
+      history: [],
+      isLoading: false
     }
   },
 
@@ -101,6 +105,7 @@ export default {
 
   methods: {
     getCoin() {
+      this.isLoading = true;
       const id = this.$route.params.id;
       Promise.all([
         getAsset(id),
@@ -109,7 +114,8 @@ export default {
       .then(([asset, history ]) => {
         this.asset = asset;
         this.history = history;
-      });
+      })
+      .finally(() => this.isLoading = false);
     }
   },
 }
