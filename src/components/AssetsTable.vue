@@ -10,12 +10,19 @@
         <th>Price</th>
         <th>Market Cap.</th>
         <th>24-hour variation</th>
-        <td class="hidden sm:block"></td>
+        <td class="hidden sm:block">
+          <input
+          class="bg-gray-100 focus:outline-none border-b border-gray-400 py-2 px-4 block w-full appearance-none leading-normal"
+          id="filter"
+          placeholder="Search..."
+          type="text"
+          v-model="filter"/>
+        </td>
       </tr>
     </thead>
     <tbody>
       <tr
-        v-for="item in assets"
+        v-for="item in filteredAssets"
         :key="item.id"
         class="border-b border-gray-200 hover:bg-gray-100 hover:bg-orange-100">
         <td>
@@ -59,11 +66,29 @@ export default {
     Button
   },
 
+  data() {
+    return {
+      filter: ''
+    }
+  },
+
   props: {
     assets: {
       type: Array,
       default: () => [],
     },
+  },
+
+  computed: {
+    filteredAssets() {
+      if(!this.filter) {
+        return this.assets;
+      }
+      debugger;
+      return this.assets.filter(elem =>
+       elem.symbol.toLowerCase().includes(this.filter.toLowerCase()) ||
+       elem.name.toLowerCase().includes(this.filter.toLowerCase()));
+    }
   },
 
   methods: {
