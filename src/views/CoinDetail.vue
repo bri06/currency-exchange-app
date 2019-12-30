@@ -72,7 +72,7 @@
           <td>{{ m.priceUsd | dollar }}</td>
           <td>{{ m.baseSymbol }} / {{ m.quoteSymbol }}</td>
           <td>
-            <Button v-if="!m.url" @btn-clicked="getExchangeUrl(m)"><slot>Get link</slot></Button>
+            <Button :is-loading="m.isLoading || false" v-if="!m.url" @btn-clicked="getExchangeUrl(m)"><slot>Get link</slot></Button>
             <a  v-else class="hover:underline text-green-600" target="_blank">{{ m.url }}</a>
           </td>
         </tr>
@@ -140,9 +140,12 @@ export default {
       })
       .finally(() => this.isLoading = false);
     },
+
     getExchangeUrl(exchange) {
+      this.$set(exchange, 'isLoading', true);
       return getExchange(exchange.exchangeId)
-        .then(res => this.$set(exchange, 'url', res.exchangeUrl));
+        .then(res => this.$set(exchange, 'url', res.exchangeUrl))
+        .finally(() => this.$set(exchange, 'isLoading', false));
     }
   },
 
