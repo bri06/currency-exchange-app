@@ -3,8 +3,10 @@
     <thead>
       <tr class="bg-gray-100 border-b-2 border-gray-400">
         <th></th>
-        <th>
-          <span>Ranking</span>
+        <th :class="{ up: this.order === 1, down: this.order === -1 }">
+          <span
+          class="underline cursor-pointer"
+          @click="changeSortOrder">Ranking</span>
         </th>
         <th>Name</th>
         <th>Price</th>
@@ -59,6 +61,9 @@
 <script>
 import Button from '@/components/Button';
 
+const ASCENDENT = 1;
+const DESCENDENT = -1;
+
 export default {
   name: 'AssetsTable',
 
@@ -68,7 +73,8 @@ export default {
 
   data() {
     return {
-      filter: ''
+      filter: '',
+      order: ASCENDENT
     }
   },
 
@@ -81,19 +87,20 @@ export default {
 
   computed: {
     filteredAssets() {
-      if(!this.filter) {
-        return this.assets;
-      }
-      debugger;
       return this.assets.filter(elem =>
        elem.symbol.toLowerCase().includes(this.filter.toLowerCase()) ||
        elem.name.toLowerCase().includes(this.filter.toLowerCase()));
-    }
+    },
   },
 
   methods: {
     goToDetail(id) {
       this.$router.push({ name: 'coin-detail', params: { id } });
+    },
+
+    changeSortOrder(order) {
+      this.order = this.order === 1 ? -1 : 1;
+      this.assets.sort((initial, final) => parseInt(initial.rank) - parseInt(final.rank) ? DESCENDENT : ASCENDENT);
     }
   }
 };
