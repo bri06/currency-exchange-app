@@ -62,21 +62,42 @@
           <span class="text-xl"></span>
         </div>
       </div>
+
+      <h3 class="text-xl my-10">Best exchange offers</h3>
+      <table>
+        <tr v-for="m in markets" :key="`${m.exchangeId}-${m.priceUsd}`" class="border-b">
+          <td>
+            <b>{{ m.exchangeId }}</b>
+          </td>
+          <td>{{ m.priceUsd | dollar }}</td>
+          <td>{{ m.baseSymbol }} / {{ m.quoteSymbol }}</td>
+          <td>
+            <Button v-if="!m.url" @btn-clicked="getExchangeUrl(m)"><slot>Get link</slot></Button>
+            <a  v-else class="hover:underline text-green-600" target="_blank">{{ m.url }}</a>
+          </td>
+        </tr>
+      </table>
     </template>
   </div>
 </template>
 
 <script>
-import { getAsset, getAssetHistory } from '@/api';
-  import { format } from 'url';
+import { getAsset, getAssetHistory, getMarkets, getExchange } from '@/api';
+import { format } from 'url';
+import Button from  '@/components/Button';
 
 export default {
   name: 'CoinDetail',
+
+  components: {
+    Button,
+  },
 
   data() {
     return {
       asset: {},
       history: [],
+      markets: [],
       isLoading: false
     }
   },
@@ -109,15 +130,22 @@ export default {
       const id = this.$route.params.id;
       Promise.all([
         getAsset(id),
-        getAssetHistory(id)
+        getAssetHistory(id),
+        getMarkets(id)
       ])
-      .then(([asset, history ]) => {
+      .then(([asset, history, markets ]) => {
         this.asset = asset;
         this.history = history;
+        this.markets = markets;
       })
       .finally(() => this.isLoading = false);
+    },
+    getExchangeUrl(exchange) {
+      return getExchange(exchange.exchangeId)
+        .then(res => this.$set(exchange, 'url', res.exchangeUrl));
     }
   },
+
 }
 </script>
 
