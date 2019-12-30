@@ -114,6 +114,12 @@ export default {
     this.getCoin();
   },
 
+  watch: {
+    $route() {
+      this.getCoin()
+    }
+  },
+
   computed: {
     min() {
       return Math.min(
