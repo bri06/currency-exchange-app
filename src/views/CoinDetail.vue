@@ -63,6 +63,14 @@
         </div>
       </div>
 
+      <line-chart
+        class="my-10"
+        :colors="['orange']"
+        :min="min"
+        :max="max"
+        :data="lineChartData"
+        ></line-chart>
+
       <h3 class="text-xl my-10">Best exchange offers</h3>
       <table>
         <tr v-for="m in markets" :key="`${m.exchangeId}-${m.priceUsd}`" class="border-b">
@@ -121,6 +129,9 @@ export default {
       return Math.abs(
         ...this.history.map(elem => parseFloat(elem.priceUsd).toFixed(2))
       )
+    },
+    lineChartData() {
+      return this.history.map(elem => [elem.date, parseFloat(elem.priceUsd).toFixed(2)]);
     }
   },
 
