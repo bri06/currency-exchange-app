@@ -1,5 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 const URL = 'https://api.coincap.io/v2';
+const MAX_MARKETS = 5;
 
 export const getAssets = () => fetch(`${URL}/assets?limit=20`)
   .then(res => res.json())
@@ -18,3 +19,11 @@ export const getAssetHistory = (coin) => {
     .then(res => res.json())
     .then(({ data }) => data);
 };
+
+export const getMarkets = id => fetch(`${URL}/assets/${id}/markets?limit=${MAX_MARKETS}`)
+  .then(res => res.json())
+  .then(({ data }) => data);
+
+export const getExchange = id => fetch(`${URL}/exchanges/${id}`)
+  .then(res => res.json())
+  .then(({ data }) => data);
