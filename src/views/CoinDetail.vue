@@ -46,20 +46,25 @@
 
         <div class="my-10 sm:mt-0 flex flex-col justify-center text-center">
           <button
+            @click="toggleConverter"
             class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-          >Change</button>
+          >{{
+            fromUsd ? `USD a ${asset.symbol}` : `${asset.symbol} to USD`
+          }}</button>
 
           <div class="flex flex-row my-5">
             <label class="w-full" for="convertValue">
               <input
+                v-model="convertValue"
                 id="convertValue"
                 type="number"
+                :placeholder="`${fromUsd ? 'USD': asset.name} value`"
                 class="text-center bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal"
               />
             </label>
           </div>
 
-          <span class="text-xl"></span>
+          <span class="text-xl">{{ convertResult }} {{ fromUsd ? asset.symbol : 'USD' }}</span>
         </div>
       </div>
 
@@ -106,7 +111,9 @@ export default {
       asset: {},
       history: [],
       markets: [],
-      isLoading: false
+      isLoading: false,
+      fromUsd: true,
+      convertValue: null
     }
   },
 
@@ -138,6 +145,13 @@ export default {
     },
     lineChartData() {
       return this.history.map(elem => [elem.date, parseFloat(elem.priceUsd).toFixed(2)]);
+    },
+    convertResult() {
+      if(!this.convertValue) {
+        return 0;
+      }
+      const result = this.fromUsd ? this.convertValue / this.asset.priceUsd : this.convertValue * this.asset.priceUsd;
+      return result.toFixed(4);
     }
   },
 
@@ -163,6 +177,9 @@ export default {
       return getExchange(exchange.exchangeId)
         .then(res => this.$set(exchange, 'url', res.exchangeUrl))
         .finally(() => this.$set(exchange, 'isLoading', false));
+    },
+    toggleConverter() {
+      this.fromUsd = !this.fromUsd;
     }
   },
 
